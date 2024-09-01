@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaxMINIOS 1.3.1</title>
+<link rel="icon" href="c:/Users/User/Downloads/BBL.png" type="image/png">
+<style>
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #1a1a1aff; /* Dark background color */
+  font-family: 'monospace'; /* Windows font */
+  overflow: hidden;
+  color: #f3f3f3; /* Light text color */
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #d8d8d8; /* Windows accent color */
+  border-top: 6px solid transparent; /* Увеличиваем прозрачную часть для более плавного эффекта */
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite; /* Уменьшаем время анимации для более быстрого вращения */
+  box-shadow: 0 0 10px rgba(34, 34, 34, 0.5); /* Добавляем тень для глубины */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+h1, p {
+  text-align: center;
+  color: #d8d8d8; /* Light text color */
+  font-family: monospace;
+}
+
+.command-line {
+  position: fixed;
+  bottom: 20px; /* Slightly raised from the bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%; /* Centered and responsive */
+  background-color: rgba(30, 30, 30, 0.9); /* Semi-transparent dark */
+  border-radius: 30px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(22, 22, 22, 0.5); /* Subtle shadow */
+  padding: 10px 20px;
+}
+
+.command-line input {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: #d8d8d8; /* Light text color */
+  font-family: monospace;
+}
+
+.command-line input:focus {
+  border: none;
+  outline: none;
+}
+
+.window-animation {
+  animation: windowOpen 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes windowOpen {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.10); opacity: 0.5; } /* Увеличение на 5% для эффекта покачивания */
+  100% { transform: scale(1); opacity: 1; }
+}
+
+</style>
+</head>
+<body>
+<div class="loader">
+  <div class="spinner"></div>
+</div>
+<h1>Loading LaxMINIOS 1.3.1...</h1>
+
+<div class="command-line">
+  <input type="text" id="commandInput" placeholder="Введите команду">
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(function() {
+    document.querySelector(".loader").style.display = "none";
+    document.querySelector("h1").style.display = "none";
+    initializeCommandLine();
+    showCurrentDate();
+  }, 3000);
+});
+
+function initializeCommandLine() {
+    document.getElementById("commandInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            const commandLine = this.value;
+            handleCommand(commandLine);
+            this.value = ""; // Очистить поле ввода после выполнения команды
+        }
+    });
+}
+
+
+function handleCommand(commandLine) {
+  const output = document.createElement("p");
+  output.className = "window-animation";
+  output.style.color = "#fff";
+  output.style.margin = "5px 0";
+  document.body.appendChild(output);
+
+  const command = commandLine.split(" ")[0].toLowerCase();
+  const argument = commandLine.substring(command.length + 1);
+
+  switch (command) {
+    case "exit":
+      output.textContent = "Выход из ОС...";
+      setTimeout(function() {
+        window.location.href = "about:blank";
+      }, 1000);
+      break;
+    case "bootscreen":
+      output.textContent = "Пожалуйста, подождите...";
+      setTimeout(function() {
+        window.location.reload();
+      }, 1000);
+      break;
+    case "help":
+      output.textContent = "Команды: exit, bootscreen, help, write, clear, miniosver, opensite, time, background, showip, ownerdiscord, notepad, search, del, ram, cpu, calc, randomnumb, creators, ouranos, pocox3pro, taskmanager, antivirus.";
+      break;
+    case "write":
+      output.textContent = "Пример вывода текста: " + (argument ? argument : "");
+      break;
+    case "clear":
+      const outputs = document.querySelectorAll("p");
+      outputs.forEach(function(elem) {
+        elem.remove();
+      });
+      break;
+    case "miniosver":
+      output.textContent = "Версия LaxMINIOS: 1.3.1";
+      break;
+    case "opensite":
+      if (argument) {
+        output.textContent = "Открывается сайт...";
+        setTimeout(function() {
+          window.open(argument, "_blank");
+          const siteOpenedMessage = document.createElement("p");
+          siteOpenedMessage.textContent = "Сайт открылся!";
+          siteOpenedMessage.style.color = "#fff";
+          siteOpenedMessage.style.margin = "5px 0";
+          document.body.appendChild(siteOpenedMessage);
+        }, 1000);
+      } else {
+        output.textContent = "Укажите сайт после команды 'opensite'";
+      }
+      break;
+    case "time":
+      output.textContent = "Текущее время: " + new Date().toLocaleTimeString();
+      break;
+      case "background":
+  if (argument) {
+    document.body.style.backgroundColor = argument;
+    output.textContent = "Цвет фона изменен на '" + argument + "'";
+  } else {
+    document.body.style.backgroundColor = "#1e1e1e"; // Установка цвета по умолчанию
+    output.textContent = "Цвет фона изменен на '" + argument + "'";
+  }
+
+      break;
+    case "showip":
+      fetch("https://api.ipify.org?format=json")
+        .then(response => response.json())
+        .then(data => {
+          output.textContent = "Ваш IP адрес: " + data.ip;
+        })
+        .catch(error => {
+          output.textContent = "Не удалось получить IP адрес";
+          console.error("Ошибка при получении IP адреса:", error);
+        });
+      break;
+    case "ownerdiscord":
+      output.textContent = "Связаться с владельцем по Discord: orange227";
+      break;
+      case "notepad":
+  const notepad = document.createElement("div");
+  notepad.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: monospace;
+    background-color: #333; /* Тёмный фон */
+    border: 3px solid #666; /* Темно-серая рамка */
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Более тёмная тень */
+    border-radius: 20px; /* Скругленные углы */
+    z-index: 9999;
+    width: 500px; /* Фиксированная ширина */
+    box-sizing: border-box; /* padding включен в ширину */
+  `;
+  notepad.innerHTML = `
+    <h2 style="margin-top: 0; font-family: monospace; color: #f3f3f3;">Блокнот</h2>
+    <textarea id='notepadText' style='width: 93%; height: 200px; border: 1px solid #555; background-color: #222; color: #f3f3f3; padding: 10px;'></textarea>
+    <br>
+    <button id='saveButton' style='background-color: #4CAF50; color: white; border-radius: 10px; padding: 10px 20px; font-family: monospace; margin-top: 10px; cursor: pointer;'>Сохранить</button>
+    <button id='closeButton' style='background-color: #f44336; color: white; border-radius: 10px; padding: 10px 20px; font-family: monospace; margin-top: 10px; cursor: pointer;'>Закрыть</button>
+  `;
+  document.body.appendChild(notepad);
+
+  document.getElementById('saveButton').addEventListener('click', function() {
+    const text = document.getElementById('notepadText').value;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const anchor = document.createElement('a');
+    anchor.download = 'saved.txt';
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.click();
+    window.URL.revokeObjectURL(anchor.href);
+  });
+
+  document.getElementById('closeButton').addEventListener('click', function() {
+    notepad.remove();
+  });
+  break;
+
+    case "del":
+      switch(argument) {
+        case "system32":
+          output.textContent = "Удаление системных файлов...";
+          setTimeout(function() {
+            window.location.href = "about:blank";
+          }, 2000);
+          break;
+        case "boot":
+          document.body.innerHTML = "<h1 style='color: #fff; text-align: center; margin-top: 40vh;'>C:/laxminios/boot не найден, переустановите систему.</h1><div class='command-line'><input type='text' id='commandInput' placeholder='Введите команду'></div>";
+          break;
+        case "orange227":
+          output.textContent = "Ошибка: Э";
+          const closeButton = document.createElement("button");
+          closeButton.textContent = "Закрыть";
+          closeButton.addEventListener("click", function() {
+            output.remove();
+          });
+          output.appendChild(closeButton);
+          break;
+        case "kernel":
+          output.textContent = "Ядро не может быть удалено.";
+          break;
+        case "config":
+          output.textContent = "Файл конфигурации удалён.";
+          break;
+        case "drivers":
+          output.textContent = "Драйверы удалены.";
+          break;
+        case "del":
+          output.textContent = "ЧТО ТЫ СДЕЛАЛ?";
+          setTimeout(function() {
+            document.body.style.animation = "shake 0.5s";
+            setTimeout(function() {
+              output.textContent = "АААААА!!";
+              output.style.color = "red";
+              document.body.style.animation = ""; // Остановить тряску
+              setTimeout(function() {
+                window.close(); // Закрыть окно
+              }, 1000);
+            }, 3000);
+          }, 1000);
+          break;
+        default:
+          output.textContent = "Файл не найден.";
+          break;
+        }
+case "antivirus":
+  const antivirusWindow = document.createElement("div");
+  antivirusWindow.style.position = "fixed";
+  antivirusWindow.style.top = "50%";
+  antivirusWindow.style.left = "50%";
+  antivirusWindow.style.transform = "translate(-50%, -50%)";
+  antivirusWindow.style.backgroundColor = "#1e1e1e"; // Темный фон по умолчанию
+  antivirusWindow.style.fontFamily = "monospace";
+  antivirusWindow.style.borderRadius = "8px";
+  antivirusWindow.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.5)";
+  antivirusWindow.style.padding = "20px";
+  antivirusWindow.style.zIndex = "9999";
+  antivirusWindow.classList.add("window-animation");
+  antivirusWindow.innerHTML = `
+    <h2 style="text-align: center; color: #ffffff;">Antivirus GetaHerz v1.1</h2>
+    <button id="scanButton" style="width: 100%; padding: 10px; background-color: #0078d4; color: white; border: none; border-radius: 5px; cursor: pointer;">Scan</button>
+    <p id="scanStatus" style="text-align: center; font-family: monospace; margin: 15px 0; color: #cccccc;">Press the 'Scan' button to start</p>
+    <button id="fixButton" style="display:none; width: 100%; padding: 10px; font-family: monospace; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">Fix</button>
+    <button id="settingsButton" style="width: 100%; padding: 10px; background-color: #0078d4; color: white; font-family: monospace; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Settings</button>
+    <button id="closeButtonAntivirus" style="position:absolute; top:10px; right:10px; background: none; border: none; font-family: monospace; color: #ffffff; font-size: 20px; cursor: pointer;">&times;</button>
+  `;
+  document.body.appendChild(antivirusWindow);
+
+  const closeButtonAntivirus = document.getElementById("closeButtonAntivirus");
+  closeButtonAntivirus.addEventListener('click', function() {
+    document.body.removeChild(antivirusWindow);
+  });
+
+  let virusFixed = false; // Флаг, указывающий, был ли вирус удален
+  let isDarkTheme = true; // Флаг для темной темы
+
+  const scanButton = document.getElementById("scanButton");
+  const fixButton = document.getElementById("fixButton");
+  const settingsButton = document.getElementById("settingsButton");
+  
+  scanButton.addEventListener('click', function startScan() {
+    if (virusFixed) {
+      const scanStatus = document.getElementById("scanStatus");
+      scanStatus.textContent = "Virus successfully removed. No more viruses.";
+      scanStatus.style.color = "green";
+      return;
+    }
+
+    scanButton.disabled = true;
+    scanButton.textContent = "Scanning...";
+    const scanStatus = document.getElementById("scanStatus");
+    
+    setTimeout(function() {
+      const isVirus = !virusFixed && Math.random() < 0.5;
+      if (isVirus) {
+        const virusTypes = ["Trojan32.generic", "Trojan32.backdoor", "Trojan32.Orange.exe"];
+        const randomVirus = virusTypes[Math.floor(Math.random() * virusTypes.length)];
+        scanStatus.textContent = `Scan complete. Virus detected: ${randomVirus}`;
+        scanStatus.style.color = "red";
+        fixButton.style.display = "inline";
+      } else {
+        scanStatus.textContent = "Scan complete. No viruses detected.";
+        scanStatus.style.color = "green";
+        fixButton.style.display = "none";
+      }
+      scanButton.disabled = false;
+      scanButton.textContent = "Scan";
+    }, 3000);
+  });
+
+  fixButton.addEventListener('click', function() {
+    const scanStatus = document.getElementById("scanStatus");
+    scanStatus.textContent = "Virus successfully removed. No more viruses.";
+    scanStatus.style.color = "green";
+    fixButton.style.display = "none";
+    virusFixed = true; // Установить флаг, что вирус удален
+  });
+
+  // Настройки
+  settingsButton.addEventListener('click', function() {
+    const settingsWindow = document.createElement("div");
+    settingsWindow.style.position = "fixed";
+    settingsWindow.style.top = "50%";
+    settingsWindow.style.left = "50%";
+    settingsWindow.style.transform = "translate(-50%, -50%)";
+    settingsWindow.style.backgroundColor = isDarkTheme ? "#1e1e1e" : "#ffffff"; // Цвет фона в зависимости от темы
+    settingsWindow.style.borderRadius = "8px";
+    settingsWindow.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.5)";
+    settingsWindow.style.padding = "20px";
+    settingsWindow.style.zIndex = "10000";
+    settingsWindow.innerHTML = `
+      <h2 style="text-align: center; color: ${isDarkTheme ? '#ffffff' : '#000000'};">Settings</h2>
+      <label style="color: ${isDarkTheme ? '#cccccc' : '#000000'};">
+        <input type="checkbox" id="themeToggle" ${isDarkTheme ? 'checked' : ''}> Dark Theme
+      </label>
+      <button id="closeSettingsButton" style="width: 100%; padding: 10px; background-color: #0078d4; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Close</button>
+    `;
+    document.body.appendChild(settingsWindow);
+
+    const closeSettingsButton = document.getElementById("closeSettingsButton");
+    closeSettingsButton.addEventListener('click', function() {
+      document.body.removeChild(settingsWindow);
+    });
+
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener('change', function() {
+      isDarkTheme = themeToggle.checked;
+      antivirusWindow.style.backgroundColor = isDarkTheme ? "#1e1e1e" : "#ffffff";
+      antivirusWindow.querySelector("h2").style.color = isDarkTheme ? "#ffffff" : "#000000";
+      antivirusWindow.querySelector("#scanStatus").style.color = isDarkTheme ? "#cccccc" : "#000000";
+      scanButton.style.backgroundColor = isDarkTheme ? "#0078d4" : "#0056a1";
+      fixButton.style.backgroundColor = isDarkTheme ? "#f44336" : "#d32f2f";
+      settingsWindow.style.backgroundColor = isDarkTheme ? "#1e1e1e" : "#ffffff";
+      settingsWindow.querySelector("h2").style.color = isDarkTheme ? "#ffffff" : "#000000";
+      settingsWindow.querySelector("label").style.color = isDarkTheme ? "#cccccc" : "#000000";
+    });
+  });
+  break;
+
+    case "calc":
+      if (argument) {
+        try {
+          const result = eval(argument);
+          output.textContent = "Результат: " + result;
+        } catch (error) {
+          output.textContent = "Ошибка в выражении: " + error.message;
+        }
+      } else {
+        output.textContent = "Укажите выражение после команды 'calculator'";
+      }
+      break;
+    case "randomnumb":
+      if (argument) {
+        const [min, max] = argument.split("-");
+        if (!isNaN(min) && !isNaN(max)) {
+          const randomNumber = Math.floor(Math.random() * (parseInt(max) - parseInt(min) + 1)) + parseInt(min);
+          output.textContent = "Случайное число от " + min + " до " + max + ": " + randomNumber;
+        } else {
+          output.textContent = "Неверный формат диапазона чисел";
+        }
+      } else {
+        output.textContent = "Укажите диапазон чисел после команды 'randomnumber'";
+      }
+      break;
+    case "search":
+      if (argument) {
+        output.textContent = "Выполняется поиск...";
+        const searchUrl = "https://www.google.com/search?q=" + encodeURIComponent(argument);
+        window.open(searchUrl, "_blank");
+        setTimeout(function() {
+          const searchCompleteMessage = document.createElement("p");
+          searchCompleteMessage.textContent = "Поиск выполнен!";
+          searchCompleteMessage.style.color = "#fff";
+          searchCompleteMessage.style.margin = "5px 0";
+          document.body.appendChild(searchCompleteMessage);
+        }, 2000); // Подождать 2 секунды перед отображением сообщения о завершении поиска
+      } else {
+        output.textContent = "Укажите ключевое слово после команды 'search'";
+      }
+      break;
+    case "creators":
+      output.textContent = "Создатели: ChatGPT, orange227";
+      break;
+    case "ouranos":
+      output.textContent = "ААЫАЬЫАЬЫЩА";
+      document.body.style.animation = "chaos 0.5s infinite";
+      rainbowEffect();
+      setTimeout(function() {
+        output.textContent = "ВЫВФВФВЫВФВЫ";
+        window.close();
+      }, 10000);
+      break;
+    case "cpu":
+      output.textContent = "Страница нагружает ЦП на " + Math.floor(Math.random() * 101) + "%";
+      break;
+    case "ram":
+      output.textContent = "Страница нагружает ОЗУ на " + Math.floor(Math.random() * 101) + "%";
+      break;
+    case "pocox3pro":
+      output.textContent = "ОМАГАД, ПОКО!!!1";
+      break;
+    default:
+      output.textContent = "Неизвестная команда. Введите 'help', чтобы увидеть доступные команды.";
+      break;
+    case "taskmanager":
+      output.textContent = "Открытие диспетчера задач...";
+      const taskManagerWindow = document.createElement("div");
+      taskManagerWindow.className = "window-animation"; // Применение анимации
+      taskManagerWindow.style.position = "fixed";
+      taskManagerWindow.style.top = "20px";
+      taskManagerWindow.style.right = "20px";
+      taskManagerWindow.style.backgroundColor = "#141414";
+      taskManagerWindow.style.color = "#fff";
+      taskManagerWindow.style.padding = "20px";
+      taskManagerWindow.style.border = "2px solid #fff";
+      taskManagerWindow.style.borderRadius = "10px";
+      taskManagerWindow.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+      taskManagerWindow.style.zIndex = "1000";
+
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "X";
+      closeButton.style.position = "absolute";
+      closeButton.style.top = "10px";
+      closeButton.style.right = "10px";
+      closeButton.style.color = "#fff";
+      closeButton.style.backgroundColor = "transparent";
+      closeButton.style.border = "none";
+      closeButton.style.fontSize = "16px";
+      closeButton.style.cursor = "pointer";
+      closeButton.onclick = function() {
+        document.body.removeChild(taskManagerWindow);
+      };
+
+      taskManagerWindow.appendChild(closeButton);
+
+      const taskList = document.createElement("ul");
+      taskList.style.listStyleType = "none";
+      taskList.style.padding = "0";
+
+      let commandsTerminated = false; // Флаг для отслеживания завершения процесса commands
+
+      function updateTasks() {
+        taskList.innerHTML = ""; // Очистка списка задач перед обновлением
+        let tasks = [
+          { name: "bbl_kernel", cpu: Math.floor(Math.random() * (40 - 10 + 1)) + 10, ram: Math.floor(Math.random() * (26 - 10 + 1)) + 10 },
+          { name: "task_manager", cpu: Math.floor(Math.random() * (40 - 10 + 1)) + 10, ram: Math.floor(Math.random() * (26 - 10 + 1)) + 10 }
+        ];
+
+        if (!commandsTerminated) {
+          tasks.push({ name: "commands", cpu: Math.floor(Math.random() * (40 - 10 + 1)) + 10, ram: Math.floor(Math.random() * (26 - 10 + 1)) + 10 });
+        }
+
+        // Увеличение использования ЦП для bbl_kernel
+        tasks[0].cpu = Math.min(tasks[0].cpu + 10, 40); // Увеличиваем на 10%, но не более 40%
+
+        // Сортировка по использованию ЦП
+        tasks.sort((a, b) => b.cpu - a.cpu);
+
+        tasks.forEach(task => {
+          const taskItem = document.createElement("li");
+          taskItem.style.display = "flex";
+          taskItem.style.justifyContent = "space-between";
+          taskItem.style.marginBottom = "5px";
+          taskItem.style.fontFamily = "monospace"; // Установка шрифта monospace
+          taskItem.textContent = `${task.name}: ЦП ${task.cpu}%, ОЗУ ${task.ram}%`;
+
+          const endTaskButton = document.createElement("button");
+          endTaskButton.textContent = "Завершить";
+          endTaskButton.style.marginLeft = "10px";
+          endTaskButton.style.fontFamily = "monospace";
+          endTaskButton.style.color = "#fff";
+          endTaskButton.style.backgroundColor = "#d9534f";
+          endTaskButton.style.border = "none";
+          endTaskButton.style.borderRadius = "3px";
+          endTaskButton.style.cursor = "pointer";
+          endTaskButton.onclick = function() {
+            if (task.name === "bbl_kernel") {
+              // Постепенное удаление всех элементов интерфейса
+              const allElements = document.body.querySelectorAll('*');
+              let index = 0;
+              const intervalId = setInterval(() => {
+                if (index < allElements.length) {
+                  allElements[index].style.transition = 'opacity 0.5s';
+                  allElements[index].style.opacity = '0';
+                  setTimeout(() => {
+                    allElements[index].remove();
+                  }, 500);
+                  index++;
+                } else {
+                  clearInterval(intervalId);
+
+                  // Создание полоски в рандомном месте
+                  const stripe = document.createElement("div");
+                  stripe.style.position = "fixed";
+                  stripe.style.width = "100%";
+                  stripe.style.height = "10px";
+                  stripe.style.backgroundColor = "white"; // Изменение цвета полоски на белый
+                  stripe.style.top = `${Math.random() * 100}%`;
+                  document.body.appendChild(stripe);
+
+                  setTimeout(() => {
+                    // Изменение фона на черный после полоски
+                    document.body.style.backgroundColor = "black";
+
+                    // Создание сообщения об ошибке
+                    const errorMessage = document.createElement("div");
+                    errorMessage.style.color = "red";
+                    errorMessage.style.fontSize = "24px";
+                    errorMessage.style.fontFamily = "monoscape"; // Установка шрифта как на картинке
+                    errorMessage.style.position = "fixed";
+                    errorMessage.style.top = "50%";
+                    errorMessage.style.left = "50%";
+                    errorMessage.style.transform = "translate(-50%, -50%)";
+                    errorMessage.style.textAlign = "center";
+                    errorMessage.innerHTML = `
+                      <p style="color: red;">BBL Kernel Error!</p>
+                      <p style="color: red;">code error: kernel.cs is stopped or terminated</p>
+                      <p style="color: red;">code error: os.cs is stopped or terminated</p>
+                      <p style="color: gray;">ERR CODE: Terminated by TaskManager</p>
+                    `;
+                    document.body.appendChild(errorMessage);
+                    stripe.remove(); // Удаление полоски при возникновении ошибки
+                  }, 300);
+                }
+              }, 100);
+            } else if (task.name === "task_manager") {
+              document.body.removeChild(taskManagerWindow);
+            } else if (task.name === "commands") {
+              output.textContent = "ERROR: commands.cs is stopped or terminated";
+              document.removeEventListener("keydown", handleCommand);
+              document.querySelector(".command-line").style.display = "none"; // Скрытие элемента для ввода команд
+              commandsTerminated = true; // Устанавливаем флаг завершения процесса commands
+            }
+            taskItem.remove();
+          };
+
+          taskItem.appendChild(endTaskButton);
+          taskList.appendChild(taskItem);
+        });
+      }
+
+      taskManagerWindow.appendChild(taskList);
+      document.body.appendChild(taskManagerWindow);
+
+      setInterval(updateTasks, 1000); // Обновление данных каждую секунду
+      break;
+    }
+}
+function closeNotepad() {
+  const notepad = document.querySelector("#notepadText");
+  notepad.parentNode.remove();
+}
+
+function rainbowEffect() {
+  let hue = 0;
+  setInterval(() => {
+    document.body.style.backgroundColor = `hsl(${hue}, 100%, 50%)`;
+    hue = (hue + 25) % 360; // Увеличиваем скорость изменения цвета в 6 раз
+  }, 50);
+}
+
+function showCurrentDate() {
+  const date = new Date();
+  const dateString = date.toLocaleDateString();
+  const dateElement = document.createElement("p");
+  dateElement.textContent = "Сегодняшняя дата: " + dateString;
+  dateElement.style.color = "#fff";
+  dateElement.style.textAlign = "center";
+  document.body.appendChild(dateElement);
+}
+</script>
+</body>
+</html>
